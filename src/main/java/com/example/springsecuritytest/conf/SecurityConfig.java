@@ -35,6 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder);
+    }
+
+    @Override
     public void configure(WebSecurity web) throws Exception {
         super.configure(web);
         web.ignoring()
@@ -48,26 +53,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // authorizeRequests() : HttpServletRequest에 따라 접근을 제한함.
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/member/info").hasAnyRole("ADMIN", "MEMBER")
-                .antMatchers("/member/**").hasRole("MEMBER")
-                .antMatchers("/post/bbs/write/**").hasRole("MEMBER")
-                .antMatchers("/post/bbs/view").hasAnyRole("ADMIN", "MEMBER")
-                .antMatchers("/notice/write").hasRole("ADMIN")
-                .antMatchers("/notice/update").hasRole("ADMIN")
-                .antMatchers("/notice/delete").hasRole("ADMIN")
-                .antMatchers("/map/**").hasRole("MEMBER")
+                .antMatchers("/member/info", "/post/bbs/view").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers("/member/**", "/post/bbs/write/**", "/map/**").hasRole("MEMBER")
+                .antMatchers("/admin/**", "/notice/write", "/notice/update", "/notice/delete").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .and()
+                // 특정 url 패턴은 csrf 해제
+                // csrf를 설정해서 사용할 경우, 특정 URL 외부 프로그램 등에서 POST 방식으로 서버에 접근하면 403 에러 발생.
                 .csrf()
-                .ignoringAntMatchers("/admin/manage/sort/**")
-                .ignoringAntMatchers("/check/email")
-                .ignoringAntMatchers("/check/nickname")
-                .ignoringAntMatchers("/reply/ajax/**")
-                .ignoringAntMatchers("/notice/ajax/**")
-                .ignoringAntMatchers("/summernote/**")
-                .ignoringAntMatchers("/map/**")
-                .ignoringAntMatchers("/api/**")
+                .ignoringAntMatchers("/admin/manage/sort/**", "/check/**", "/summernote/**", "/map/**", "/api/**")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -85,10 +79,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 예외가 발생 했을 때 핸들러를 통해서 처리할 수 있다.
                 .exceptionHandling().accessDeniedPage("/access-denied");
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder);
     }
 }
