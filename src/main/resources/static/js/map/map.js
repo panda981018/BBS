@@ -255,20 +255,21 @@ function bbsListModalOpen(bbsList) {
         let el = $('<li>', {});
         el.addClass("mx-3 my-3 px-2 py-2 bbs-list-li");
         el.attr('id', 'bbsItem_'+i);
-        const contents =
+        const contents = '<div class="d-flex flex-row justify-content-between align-items-center">' +
             '<input id="bbs-item-id" type="hidden" value="' + bbsList[i].id + '">' +
             '<span class="bbs-title mb-3">' +
             bbsList[i].bbsTitle +
-            '</span>' +
-            '<div class="bbs-content">' +
-            bbsList[i].bbsContents +
-            '</div>';
+            '</span>'
+            + '<span class="mb-3">' +
+            bbsList[i].bbsDate +
+            '</span> '
+            + '</div>';
         el.append(contents);
         bbsListDiv[0].append(el[0]);
     }
 
-    $(document).on('click', 'li.mx-3.my-3', function () {
-        const bbsId = this.firstChild.defaultValue;
+    $(document).on('click', 'li.mx-3.my-3.px-2.py-2.bbs-list-li', function () {
+        const bbsId = this.firstChild.firstChild.defaultValue;
         location.href = '/post/bbs/view?id=' + bbsId;
     });
 

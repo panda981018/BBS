@@ -48,13 +48,13 @@ function uploadSummernoteImage(file) { // 서버에 이미지 업로드
         type: 'POST',
         data: data,
         enctype: 'multipart/form-data',
-        url: '/summernote/uploadImg',
+        url: '/api/summernote/uploadImg',
         contentType: false,
         processData: false,
         success: function (data) {
             $('#writeSpace').summernote('insertImage', data.url);
         }
-    })
+    });
 }
 
 function deleteImageFile(src) { // 이미지 삭제 함수
@@ -69,5 +69,5 @@ function deleteImageFile(src) { // 이미지 삭제 함수
         success: function (response) {
             console.log(response);
         }
-    })
+    });
 }
