@@ -13,14 +13,6 @@ $('#findCurrentLocation').on('click', function () { // 현재 위치로 이동�
 });
 
 function initMap() {
-    // const container = document.getElementById('map');
-    // const options = {
-    //     center: new kakao.maps.LatLng(33.450701, 126.570667),
-    //     level: 3
-    // };
-    //
-    // const map = new kakao.maps.Map(container, options);
-
     getCurrentLocation(); // 현재 위치를 받아서 표시한 후 db에 저장된 좌표들을 지도에 표시
     if (geocoder == null)
         geocoder = new kakao.maps.services.Geocoder();
@@ -53,18 +45,17 @@ function getCurrentLocation() {
 }
 
 function geolocationFailCallBack(error) {
-    // switch (error.code) {
-    //     case 1 :
-    //         alert("geolocation failed. PERMISSION DENIED");
-    //         break;
-    //     case 2 :
-    //         alert("geolocation failed. POSITION_UNAVAILABLE");
-    //         break;
-    //     case 3 :
-    //         alert("geolocation failed. TIMEOUT");
-    //         break;
-    // }
-    alert("geolocation failed. error code :" + error.code);
+    switch (error.code) {
+        case 1 :
+            alert("geolocation failed. PERMISSION DENIED");
+            break;
+        case 2 :
+            alert("geolocation failed. POSITION_UNAVAILABLE");
+            break;
+        case 3 :
+            alert("geolocation failed. TIMEOUT");
+            break;
+    }
 }
 
 function getData(pageNum) {
